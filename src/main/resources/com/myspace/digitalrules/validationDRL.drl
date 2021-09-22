@@ -1,0 +1,67 @@
+package com.myspace.digitalrules;
+
+import com.myspace.digitalrules.error;
+import com.myspace.digitalrules.PolicyDetails;
+import java.util.ArrayList;
+import java.util.List;
+
+ruleflow-group "validationDRL"
+rule "portableInsuredValue validation "
+when
+$PolicyDetails:PolicyDetails(PolicyDetails.portableInsuredValue>=PolicyDetails.homeContentsInsuredValue/2)
+$a:  ArrayList()  
+              from collect( com.myspace.digitalrules.error() from $PolicyDetails.getErrors()) 
+then
+//System.out.println("portableInsuredValue more than excepted");
+$a.add(new com.myspace.digitalrules.error("portableInsuredValue","Total Portables insured value restricted to less than 50% of the Home Contents Insured Value"));
+//System.out.println($a);
+$PolicyDetails.setErrors($a);
+//System.out.println($PolicyDetails.getErrors());
+end;
+
+rule "license validation "
+when
+$PolicyDetails:PolicyDetails(((PolicyDetails.personalDetails.licenseAppliedDate.getTime()-PolicyDetails.personalDetails.policyHolderDOB.getTime())/(1000*60*60*24) <= 6574&&
+(PolicyDetails.personalDetails.licenseAppliedDate.getMonth()<=1||PolicyDetails.personalDetails.policyHolderDOB.getMonth()<=1))||((PolicyDetails.personalDetails.licenseAppliedDate.getTime()-PolicyDetails.personalDetails.policyHolderDOB.getTime())/(1000*60*60*24) < 6574&&
+(PolicyDetails.personalDetails.licenseAppliedDate.getMonth()>1||PolicyDetails.personalDetails.policyHolderDOB.getMonth()>1)))
+$a:  ArrayList()  
+              from collect( com.myspace.digitalrules.error() from $PolicyDetails.getErrors()) 
+then
+//System.out.println("age should croos 18");
+$a.add(new com.myspace.digitalrules.error("driver license","Can't get a license on a date sooner than regular drivers 18th Birthday"));
+//System.out.println($a);
+$PolicyDetails.setErrors($a);
+//System.out.println($PolicyDetails.getErrors());
+end;
+
+rule "thatchedRoof validation "
+when
+$PolicyDetails:PolicyDetails(PolicyDetails.lightningConductorOption==false && PolicyDetails.thrashedroof==true)
+$a:  ArrayList()  
+              from collect( com.myspace.digitalrules.error() from $PolicyDetails.getErrors()) 
+then
+//System.out.println("Can't have thatched roof without having a lightning conductor option when adding new building to policy");
+$a.add(new com.myspace.digitalrules.error("thatchedroof","Can't have thatched roof without having a lightning conductor option when adding new building to policy"));
+//System.out.println($a);
+$PolicyDetails.setErrors($a);
+//System.out.println($PolicyDetails.getErrors());
+//$PolicyDetails.setErrorMessage("Can't have thatched roof without having a lightning conductor option when adding new building to policy.");
+end;
+
+rule "Household Member logic validation "
+when
+$PolicyDetails:PolicyDetails(PolicyDetails.personalDetails.policyHolderMaritualStatusCode=="S" && PolicyDetails.personalDetails.memberRelationToPolicyHolderCode=="S")
+$a:  ArrayList()  
+              from collect( com.myspace.digitalrules.error() from $PolicyDetails.getErrors()) 
+then
+//System.out.println("Household member cannot hold a spouse relationship to policy holder");
+$a.add(new com.myspace.digitalrules.error("memberRelationToPolicyHolderCode","Household member cannot hold a spouse relationship to policy holder"));
+//System.out.println($a);
+$PolicyDetails.setErrors($a);
+//System.out.println($PolicyDetails.getErrors());
+end;
+
+
+
+
+

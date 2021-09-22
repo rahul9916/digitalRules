@@ -1,0 +1,49 @@
+package com.myspace.digitalrules;
+import com.myspace.digitalrules.productDetails;
+
+ruleflow-group "productDrl"
+rule "1"
+when
+$productDetails:productDetails(productDetails.productName=="Discovery"&&productDetails.benefitType=="Day-To-Day"&&productDetails.hospitalType=="Private")
+then
+$productDetails.setScoringFactor(5);
+end;
+
+rule "2"
+when
+$productDetails:productDetails(productDetails.productName=="Discovery"&&productDetails.benefitType=="Day-To-Day"&&productDetails.hospitalType=="Public")
+then
+$productDetails.setScoringFactor(3);
+end;
+
+
+rule "3"
+when
+$productDetails:productDetails(productDetails.productName=="Momentum"&&productDetails.benefitType=="Day-To-Day"&&productDetails.hospitalType=="Private")
+then
+$productDetails.setScoringFactor(5);
+end;
+
+rule "4"
+when
+$productDetails:productDetails(productDetails.productName=="Momentum"&&productDetails.benefitType=="Day-To-Day"&&productDetails.hospitalType=="Public")
+then
+$productDetails.setScoringFactor(2);
+end;
+
+
+rule "5"
+when
+$productDetails:productDetails(productDetails.productName=="Comprehensive"&&productDetails.benefitType=="Day-To-Day"&&productDetails.hospitalType=="Private")
+then
+$productDetails.setScoringFactor(3);
+end;
+
+rule "6"
+when
+$productDetails:productDetails(productDetails.productName=="Comprehensive"&&productDetails.benefitType=="Day-To-Day"&&productDetails.hospitalType=="Public")
+then
+$productDetails.setScoringFactor(2);
+end;
+
+

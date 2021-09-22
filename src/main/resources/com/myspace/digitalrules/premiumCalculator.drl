@@ -1,0 +1,43 @@
+package com.myspace.digitalrules;
+
+import com.myspace.digitalrules.premiumCalc;
+
+ruleflow-group "premiumCalculator"
+rule "1st calculation "
+when
+$premiumCalc:premiumCalc(premiumCalc.membershipType=="main" && premiumCalc.salary>=0 && premiumCalc.salary<=8500)
+
+then
+$premiumCalc.setPremiumAmount(1000);
+//System.out.println($PolicyDetails.getErrors());
+end;
+
+rule "2nd calculation "
+when
+$premiumCalc:premiumCalc(premiumCalc.membershipType=="main" && premiumCalc.salary>=8501 && premiumCalc.salary<=15000)
+
+then
+$premiumCalc.setPremiumAmount(2000);
+//System.out.println($PolicyDetails.getErrors());
+end;
+
+rule "3rd calculation "
+when
+$premiumCalc:premiumCalc(premiumCalc.productName=="Momentum"&&premiumCalc.benefitType=="Day-To-Day"&&premiumCalc.membershipType=="main" && premiumCalc.salary>=0 && premiumCalc.salary<=8500)
+
+then
+$premiumCalc.setPremiumAmount(1000);
+$premiumCalc.setCoverage(1000);
+
+//System.out.println($PolicyDetails.getErrors());
+end;
+
+rule "4th calculation "
+when
+$premiumCalc:premiumCalc(premiumCalc.productName=="Momentum"&&premiumCalc.benefitType=="Day-To-Day"&&premiumCalc.membershipType=="main" && premiumCalc.salary>=8501 && premiumCalc.salary<=15000)
+
+then
+$premiumCalc.setPremiumAmount(2000);
+$premiumCalc.setCoverage(2000);
+//System.out.println($PolicyDetails.getErrors());
+end;
